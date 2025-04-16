@@ -16,6 +16,10 @@ export const postUsers = async (userName, password, roleId, userId) => {
             PasswordHash: password,
             RoleId: roleId,
             UserCreation: parseInt(userId)
+         }, {
+            headers: {
+               'Content-Type': 'application/json'
+            }
          });
 
          if (res.status === 200)
