@@ -1,5 +1,6 @@
 import axios from "axios";
 import { show_alert } from "../utils/swal"
+import { API_BASE_URL } from "../utils/apiBaseURL";
 
 export const validateSetLogin = async (userName, password) => {
    if (userName === '')
@@ -8,7 +9,7 @@ export const validateSetLogin = async (userName, password) => {
       show_alert("El campo contraseña es obligatorio", "warning");
    else {
       try {
-         const res = await axios.post(`https://localhost:44335/api/Users/Login`, {
+         const res = await axios.post(`${API_BASE_URL}Users/Login`, {
             UserName: userName.toLowerCase().trim(),
             Password: password
          })
