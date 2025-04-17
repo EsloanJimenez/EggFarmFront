@@ -15,7 +15,7 @@
         <img src="../assets/img/logo.webp" alt="Logo" class="h-10" />
         <li>
           <router-link to="/customer">Clientes</router-link>
-        </li :if="userRole != 1 || userRole != 4">
+        </li v-if="userRole != 1 || userRole != 4">
         <li><router-link to="/products">Productos</router-link></li>
         <li>
           <router-link to="/orders">Ordenes</router-link>
@@ -23,7 +23,7 @@
         <li>
           <router-link to="/inventory">Inventario</router-link>
         </li>
-        <li :if="userRole != 1">
+        <li v-if="userRole != 1">
           <router-link to="/users">Usuarios</router-link>
         </li>
         <li @click="logOut"><router-link to="">Cerrar Seccion</router-link></li>
