@@ -23,7 +23,7 @@ export const postCustomers = async (firstName, lastName, email, phone, address, 
             Email: email,
             Phone: phone,
             Address: address,
-            UserCreation: parseInt(userId)
+            UserCreation: userId
          });
 
          if (res.status === 200)

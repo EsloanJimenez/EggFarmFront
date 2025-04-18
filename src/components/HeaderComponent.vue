@@ -13,17 +13,19 @@
     <nav>
       <ul>
         <img src="../assets/img/logo.webp" alt="Logo" class="h-10" />
-        <li>
+        <li v-if="userRole == 1 || userRole == 2">
           <router-link to="/customer">Clientes</router-link>
         </li>
-        <li><router-link to="/products">Productos</router-link></li>
-        <li>
+        <li v-if="userRole == 1">
+          <router-link to="/products">Productos</router-link>
+        </li>
+        <li v-if="userRole == 1 || userRole == 2">
           <router-link to="/orders">Ordenes</router-link>
         </li>
         <li>
           <router-link to="/inventory">Inventario</router-link>
         </li>
-        <li>
+        <li v-if="userRole == 1">
           <router-link to="/users">Usuarios</router-link>
         </li>
         <li @click="logOut"><router-link to="">Cerrar Seccion</router-link></li>
@@ -37,7 +39,6 @@
 import { ref, onMounted, onUpdated } from "vue";
 import { logOut } from "../js/logOut";
 
-const userId = ref(localStorage.getItem("userId"));
 const userRole = ref(localStorage.getItem("userRole"));
 
 const isTranslate = ref(true);

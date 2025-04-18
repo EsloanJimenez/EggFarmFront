@@ -16,7 +16,7 @@ export const putProduct = async (id, productName, description, price, userId) =>
             ProductName: productName,
             Description: description,
             Price: price,
-            UserModify: parseInt(userId)
+            UserModify: userId
          });
          if (res.status === 200)
             show_alert('Producto actualizado con exito.', 'success');

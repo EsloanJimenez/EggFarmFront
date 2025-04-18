@@ -56,6 +56,7 @@
 
 <script setup>
 import { onMounted, onUpdated, ref } from "vue";
+import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
 import { postUsers } from "../services/users/post";
@@ -64,8 +65,9 @@ import { getRole } from "../services/role/get";
 import { putUsers } from "../services/users/put";
 import { deleteUsers } from "../services/users/delete";
 
+import { userLogin } from "../utils/globalVariables";
+
 import "../css/table.css";
-import HeaderComponent from "../components/HeaderComponent.vue";
 
 const receivedData = ref({});
 const datosUsers = ref([]);
@@ -74,7 +76,6 @@ const modalTitle = ref("");
 const modalFields = ref([]);
 const isEditMode = ref(false);
 const selectedUsers = ref({});
-const userLogin = ref(localStorage.getItem("userId"));
 
 onMounted(async () => {
   datosUsers.value = await getUsers();
@@ -130,14 +131,14 @@ const onSubmit = async (data) => {
       receivedData.value.userName,
       receivedData.value.passwordHash,
       receivedData.value.role,
-      userLogin.value
+      userLogin
     );
   } else {
     await postUsers(
       receivedData.value.userName,
       receivedData.value.passwordHash,
       receivedData.value.role,
-      userLogin.value
+      userLogin
     );
   }
 };

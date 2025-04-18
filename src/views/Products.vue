@@ -71,6 +71,7 @@
 
 <script setup>
 import { onMounted, onUpdated, ref, watch } from "vue";
+import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
 import { postProducts } from "../services/products/post";
@@ -78,8 +79,9 @@ import { getProducts } from "../services/products/get";
 import { putProduct } from "../services/products/put";
 import { deleteProduct } from "../services/products/deleted";
 
+import { userLogin } from "../utils/globalVariables";
+
 import "../css/table.css";
-import HeaderComponent from "../components/HeaderComponent.vue";
 
 const search = ref("");
 const filteredProduct = ref([]);
@@ -89,7 +91,6 @@ const modalTitle = ref("");
 const modalFields = ref([]);
 const selectedProducts = ref({});
 const isEditMode = ref(false);
-const userLogin = ref(localStorage.getItem("userId"));
 
 onMounted(async () => {
   datosProducts.value = await getProducts();
@@ -151,14 +152,14 @@ const onSubmit = async (data) => {
       receivedData.value.productName,
       receivedData.value.description,
       receivedData.value.price,
-      userLogin.value
+      userLogin
     );
   } else {
     await postProducts(
       receivedData.value.productName,
       receivedData.value.description,
       receivedData.value.price,
-      userLogin.value
+      userLogin
     );
   }
 };

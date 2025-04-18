@@ -15,7 +15,7 @@ export const postProducts = async (productName, description, price, userId) => {
             ProductName: productName,
             Description: description,
             Price: price,
-            UserCreation: parseInt(userId)
+            UserCreation: userId
          });
 
          if (res.status === 200)

@@ -16,7 +16,7 @@ export const deleteUsers = async (id, userId, userName) => {
          const res = await axios.delete(`${API_BASE_URL}Users/${id}`, {
             data: {
                UserId: id,
-               UserDelete: parseInt(userId)
+               UserDelete: userId
             }
          });
 

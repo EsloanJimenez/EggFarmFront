@@ -4,6 +4,7 @@
     <div id="table-header">
       <h2 class="mb-4">Lista De Inventario</h2>
       <NewBotton
+        v-if="userRole == 1 || userRole == 4"
         title="+"
         btnStyle="btn btn-primary btn-add"
         data-bs-toggle="modal"
@@ -19,6 +20,7 @@
           <th>Cantidad Agregada</th>
           <th>Disponibles</th>
           <th>Nota</th>
+          <th v-if="userRole == 1">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +30,22 @@
           <td>{{ item.quantityAdded }}</td>
           <td>{{ item.quantityAvailable }}</td>
           <td>{{ item.notes }}</td>
+          <td class="btn-action" v-if="userRole == 1">
+            <NewBotton
+              title="Actualizar"
+              btnStyle="btn btn-warning btn-sm me-2"
+              data-bs-toggle="modal"
+              data-bs-target="#contactModal"
+              @click="openModal('Actualizar', item)"
+            />
+            <NewBotton
+              title="Eliminar"
+              btnStyle="btn btn-danger btn-sm"
+              @click="
+                deleteInventory(item.inventoryId, userLogin, item.productName)
+              "
+            />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -43,14 +61,16 @@
 
 <script setup>
 import { onMounted, onUpdated, ref } from "vue";
+import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
 import { postInventory } from "../services/inventory/post";
 import { getInventory, getInventoryId } from "../services/inventory/get";
 import { getProducts } from "../services/products/get";
+import { deleteInventory } from "../services/inventory/deleted";
 
 import "../css/table.css";
-import HeaderComponent from "../components/HeaderComponent.vue";
+import { userLogin, userRole } from "../utils/globalVariables";
 
 const receivedData = ref({});
 const datosInventory = ref([]);
@@ -60,7 +80,6 @@ const modalTitle = ref("");
 const modalFields = ref([]);
 const isEditMode = ref(false);
 const selectedInventory = ref({});
-const userLogin = ref(localStorage.getItem("userId"));
 
 onMounted(async () => {
   datosInventory.value = await getInventory();
@@ -72,8 +91,9 @@ onUpdated(async () => {
   datosProducts.value = await getProducts();
 });
 
-const openModal = (inventory = null) => {
-  modalTitle.value = "Registrar Inventario";
+const openModal = (action = "Registrar Inventario", inventory = null) => {
+  isEditMode.value = action === "Actualizar";
+  modalTitle.value = isEditMode.value ? "Actualizar" : "Registrar Inventario";
 
   selectedInventory.value = inventory ? { ...inventory } : {};
 
@@ -121,7 +141,7 @@ const onSubmit = async (data) => {
       receivedData.value.quantityAdded,
       newQuantityAvailable,
       receivedData.value.notes,
-      userLogin.value
+      userLogin
     );
   }
 };

@@ -24,7 +24,7 @@ export const postInventory = async (productId, quantityAdded, quantityAvailable,
                   QuantityAdded: quantityAdded,
                   QuantityAvailable: quantityAvailable,
                   Notes: notes,
-                  UserCreation: parseInt(userId)
+                  UserCreation: userId
                });
 
                if (res.status === 200)
