@@ -15,7 +15,7 @@ export const postUsers = async (userName, password, roleId, userId) => {
             UserName: userName.toLowerCase().trim(),
             PasswordHash: password,
             RoleId: roleId,
-            UserCreation: parseInt(userId)
+            UserCreation: userId
          });
 
          if (res.status === 200)

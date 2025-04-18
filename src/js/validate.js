@@ -3,6 +3,10 @@ import { show_alert } from "../utils/swal"
 import { API_BASE_URL } from "../utils/apiBaseURL";
 
 export const validateSetLogin = async (userName, password) => {
+   console.log(userName);
+   console.log(password);
+
+
    if (userName === '')
       show_alert("El campo nombre de usuario es obligatorio", "warning");
    else if (password === '')

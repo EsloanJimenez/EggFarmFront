@@ -24,7 +24,7 @@ export const putCustomers = async (id, firstName, lastName, email, phone, addres
             Email: email,
             Phone: phone,
             Address: address,
-            UserModify: parseInt(userId)
+            UserModify: userId
          });
 
          if (res.status === 200 || res.status === 204)

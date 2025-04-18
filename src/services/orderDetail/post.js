@@ -10,7 +10,7 @@ export const postOrderDetails = async (orderId, productId, quantity, unitPrice, 
          Quantity: quantity,
          UnitPrice: unitPrice,
          SubTotal: subTotal,
-         UserCreation: parseInt(userId)
+         UserCreation: userId
       })
    } catch (err) {
       show_alert(err, 'warning');

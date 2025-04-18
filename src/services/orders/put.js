@@ -15,7 +15,7 @@ export const putOrder = async (id, customerId, totalAmount, statu, userId) => {
             CustomerId: customerId,
             TotalAmount: totalAmount,
             Status: statu,
-            UserModify: parseInt(userId)
+            UserModify: userId
          })
 
          if (res.status === 200)

@@ -27,7 +27,7 @@
           <td>{{ item.firstName }}</td>
           <td>{{ formatCurrency(item.totalAmount) }}</td>
           <td>{{ item.status }}</td>
-          <td class="btn-action">
+          <td class="btn-action" v-if="item.userCreation === userLogin">
             <NewBotton
               title="Ver Detalles"
               btnStyle="btn btn-info btn-sm me-2"
@@ -79,6 +79,8 @@
 
 <script setup>
 import { onMounted, onUpdated, ref } from "vue";
+
+import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
 import { postOrder } from "../services/orders/post";
@@ -97,8 +99,8 @@ import OrderDetailsModal from "../components/OrderDetailsModal.vue";
 import { formatCurrency } from "../js/formatCurrency";
 
 import "../css/table.css";
-import HeaderComponent from "../components/HeaderComponent.vue";
 import { show_alert } from "../utils/swal";
+import { userLogin, userRole } from "../utils/globalVariables";
 
 const receivedData = ref({});
 const datosOrder = ref([]);
@@ -114,7 +116,6 @@ const selectedOrder = ref({});
 const totalAmo = ref(0);
 const selectedOrderDetail = ref([]);
 const isOrderDetailModalOpen = ref(false);
-const userLogin = ref(localStorage.getItem("userId"));
 
 const loading = ref(null);
 
@@ -138,22 +139,16 @@ const removeProduct = async (index, productId, quantity, orderDetailId) => {
 
   let newAvailable = datosInventoryId.value.quantityAvailable + quantity;
 
-  console.log(`cantidad recivida:   ${quantity}`);
-  console.log(
-    `cantidad disponible: ${datosInventoryId.value.quantityAvailable}`
-  );
-  console.log(`suma cantidades:     ${newAvailable}`);
-
   await putInventory(
     datosInventoryId.value.inventoryId,
     productId,
     datosInventoryId.value.quantityAdded,
     newAvailable,
     datosInventoryId.value.notes,
-    userLogin.value
+    userLogin
   );
 
-  await deleteOrderDetails(orderDetailId, userLogin.value);
+  await deleteOrderDetails(orderDetailId, userLogin);
 };
 
 // Función para abrir el modal y pasar los datos
@@ -291,7 +286,7 @@ const onSubmit = async (data) => {
             product.quantity,
             product.price,
             subTotal,
-            userLogin.value
+            userLogin
           );
 
           await putInventory(
@@ -300,7 +295,7 @@ const onSubmit = async (data) => {
             datosInventoryId.value.quantityAdded,
             newAvailable,
             datosInventoryId.value.notes,
-            userLogin.value
+            userLogin
           );
 
           existinProducts.delete(product.productId);
@@ -327,7 +322,7 @@ const onSubmit = async (data) => {
           product.quantity,
           product.price,
           subTotal,
-          userLogin.value
+          userLogin
         );
 
         await putInventory(
@@ -336,7 +331,7 @@ const onSubmit = async (data) => {
           datosInventoryId.value.quantityAdded,
           newAvailable,
           datosInventoryId.value.notes,
-          userLogin.value
+          userLogin
         );
       }
     }
@@ -346,7 +341,7 @@ const onSubmit = async (data) => {
       receivedData.value.customerId,
       totalAmo.value,
       receivedData.value.status,
-      userLogin.value
+      userLogin
     );
   } else {
     for (let i = 0; i < receivedData.value.products.length; i++) {
@@ -370,7 +365,7 @@ const onSubmit = async (data) => {
       receivedData.value.customerId,
       totalAmo.value,
       receivedData.value.status,
-      userLogin.value
+      userLogin
     );
 
     for (let i = 0; i < receivedData.value.products.length; i++) {
@@ -388,7 +383,7 @@ const onSubmit = async (data) => {
         product.quantity,
         product.price,
         subTotal,
-        userLogin.value
+        userLogin
       );
 
       await putInventory(
@@ -397,7 +392,7 @@ const onSubmit = async (data) => {
         datosInventoryId.value.quantityAdded,
         newAvailable,
         datosInventoryId.value.notes,
-        userLogin.value
+        userLogin
       );
     }
   }

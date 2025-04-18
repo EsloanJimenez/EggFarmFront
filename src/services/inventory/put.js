@@ -13,7 +13,7 @@ export const putInventory = async (id, productId, quantityAdded, quantityAvailab
             QuantityAdded: quantityAdded,
             QuantityAvailable: quantityAvailable,
             Notes: notes,
-            UserModify: parseInt(userId)
+            UserModify: userId
          });
       } catch (err) {
          show_alert(err)

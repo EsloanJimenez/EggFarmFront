@@ -16,7 +16,7 @@ export const deleteProduct = (id, userId, productName) => {
          const res = await axios.delete(`${API_BASE_URL}Products/${id}`, {
             data: {
                ProductId: id,
-               UserDelete: parseInt(userId)
+               UserDelete: userId
             }
          });
 

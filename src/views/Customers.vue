@@ -20,7 +20,7 @@
           <th>Correo</th>
           <th>Teléfono</th>
           <th>Dirección</th>
-          <th>Acciones</th>
+          <th v-if="userRole == 1 || userRole == 4">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -31,7 +31,7 @@
           <td>{{ item.email }}</td>
           <td>{{ item.phone }}</td>
           <td>{{ item.address }}</td>
-          <td class="btn-action">
+          <td class="btn-action" v-if="userRole == 1 || userRole == 4">
             <NewBotton
               title="Actualizar"
               btnStyle="btn btn-warning btn-sm me-2"
@@ -67,6 +67,7 @@
 
 <script setup>
 import { onMounted, onUpdated, ref } from "vue";
+import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
 import { postCustomers } from "../services/customers/post";
@@ -74,8 +75,9 @@ import { getCustomers } from "../services/customers/get";
 import { putCustomers } from "../services/customers/put";
 import { deleteCustomer } from "../services/customers/deleted";
 
+import { userLogin, userRole } from "../utils/globalVariables";
+
 import "../css/table.css";
-import HeaderComponent from "../components/HeaderComponent.vue";
 
 const receivedData = ref({});
 const datosCustomers = ref([]);
@@ -83,7 +85,6 @@ const modalTitle = ref("");
 const modalFields = ref([]);
 const isEditMode = ref(false);
 const selectedCustomers = ref({});
-const userLogin = ref(localStorage.getItem("userId"));
 
 onMounted(async () => {
   datosCustomers.value = await getCustomers();
@@ -154,7 +155,7 @@ const onSubmit = async (data) => {
       receivedData.value.email,
       receivedData.value.phone,
       receivedData.value.address,
-      userLogin.value
+      userLogin
     );
   } else {
     await postCustomers(
@@ -163,7 +164,7 @@ const onSubmit = async (data) => {
       receivedData.value.email,
       receivedData.value.phone,
       receivedData.value.address,
-      userLogin.value
+      userLogin
     );
   }
 };

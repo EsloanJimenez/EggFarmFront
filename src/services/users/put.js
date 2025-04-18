@@ -17,7 +17,7 @@ export const putUsers = async (id, userName, password, role, userId) => {
                UserName: userName.toLowerCase().trim(),
                PasswordHash: password,
                Role: role.toLowerCase().trim(),
-               UserModify: parseInt(userId)
+               UserModify: userId
             });
 
             if (res.status === 200 || res.status === 204)

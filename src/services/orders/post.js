@@ -16,7 +16,7 @@ export const postOrder = async (customerId, totalAmount, statu, userId) => {
             CustomerId: customerId,
             TotalAmount: totalAmount,
             Status: statu,
-            UserCreation: parseInt(userId)
+            UserCreation: userId
          })
 
          if (res.status === 200)

@@ -11,7 +11,7 @@ export const putOrderDetails = async (id, orderId, productId, quantity, unitPric
          Quantity: quantity,
          UnitPrice: unitPrice,
          SubTotal: subTotal,
-         UserModify: parseInt(userId)
+         UserModify: userId
       })
    } catch (err) {
       show_alert(err, 'warning');
