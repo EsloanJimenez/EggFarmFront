@@ -3,6 +3,14 @@
   <div class="container mt-5">
     <div id="table-header">
       <h2 class="mb-4">Lista de Clientes</h2>
+      <input
+        type="text"
+        v-model="search"
+        class="form form-control"
+        name="search"
+        id="search"
+        placeholder="Buscar Por Nombre o Apellido"
+      />
       <NewBotton
         title="+"
         btnStyle="btn btn-primary btn-add"
@@ -23,8 +31,8 @@
           <th v-if="userRole == 1 || userRole == 4">Acciones</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, i) in datosCustomers" :key="i">
+      <tbody v-if="filterName.length > 0">
+        <tr v-for="(item, i) in filterName" :key="i">
           <td>{{ i + 1 }}</td>
           <td>{{ item.firstName }}</td>
           <td>{{ item.lastName }}</td>
@@ -66,7 +74,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
@@ -79,6 +87,7 @@ import { userLogin, userRole } from "../utils/globalVariables";
 
 import "../css/table.css";
 
+const search = ref("");
 const receivedData = ref({});
 const datosCustomers = ref([]);
 const modalTitle = ref("");
@@ -90,9 +99,13 @@ onMounted(async () => {
   datosCustomers.value = await getCustomers();
 });
 
-onUpdated(async () => {
-  datosCustomers.value = await getCustomers();
-});
+const filterName = computed(() =>
+  datosCustomers.value.filter(
+    (n) =>
+      n.firstName.toLowerCase().includes(search.value.toLowerCase()) ||
+      n.lastName.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
 
 const openModal = (action = "Registrar Cliente", customer = null) => {
   isEditMode.value = action === "Actualizar";
@@ -167,6 +180,8 @@ const onSubmit = async (data) => {
       userLogin
     );
   }
+
+  datosCustomers.value = await getCustomers();
 };
 </script>
 

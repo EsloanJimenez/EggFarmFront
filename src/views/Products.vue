@@ -9,7 +9,7 @@
         class="form form-control"
         name="search"
         id="search"
-        placeholder="Buscar Producto"
+        placeholder="Buscar Por Nombre"
       />
       <NewBotton
         title="+"
@@ -29,8 +29,8 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody v-if="filteredProduct.length">
-        <tr v-for="(item, i) in filteredProduct" :key="i">
+      <tbody v-if="filterName.length > 0">
+        <tr v-for="(item, i) in filterName" :key="i">
           <td>{{ i + 1 }}</td>
           <td>{{ item.productName }}</td>
           <td>{{ item.description }}</td>
@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
@@ -84,7 +84,6 @@ import { userLogin } from "../utils/globalVariables";
 import "../css/table.css";
 
 const search = ref("");
-const filteredProduct = ref([]);
 const receivedData = ref({});
 const datosProducts = ref([]);
 const modalTitle = ref("");
@@ -94,21 +93,13 @@ const isEditMode = ref(false);
 
 onMounted(async () => {
   datosProducts.value = await getProducts();
-  filteredProduct.value = datosProducts.value;
 });
 
-onUpdated(async () => {
-  datosProducts.value = await getProducts();
-  filteredProduct.value = datosProducts.value;
-});
-
-watch(search, (newQuery) => {
-  if (newQuery.trim().length >= 2) {
-    filteredProduct.value = datosProducts.value.filter((product) =>
-      product.productName.toLowerCase().includes(newQuery.toLowerCase())
-    );
-  } else filteredProduct.value = [];
-});
+const filterName = computed(() =>
+  datosProducts.value.filter((n) =>
+    n.productName.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
 
 const openModal = (action = "Registrar Producto", product = null) => {
   isEditMode.value = action === "Actualizar";
@@ -162,12 +153,9 @@ const onSubmit = async (data) => {
       userLogin
     );
   }
+
+  datosProducts.value = await getProducts();
 };
 </script>
 
-<style scoped>
-.form {
-  width: 30%;
-  height: 40px;
-}
-</style>
+<style scoped></style>

@@ -3,6 +3,14 @@
   <div class="container mt-5">
     <div id="table-header">
       <h2 class="mb-4">Lista De Ordenes</h2>
+      <input
+        type="text"
+        v-model="search"
+        class="form form-control"
+        name="search"
+        id="search"
+        placeholder="Buscar Por Nombre"
+      />
       <NewBotton
         title="+"
         btnStyle="btn btn-primary btn-add"
@@ -21,8 +29,8 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, i) in datosOrder" :key="i">
+      <tbody v-if="filterName.length > 0">
+        <tr v-for="(item, i) in filterName" :key="i">
           <td>{{ item.orderId }}</td>
           <td>{{ item.firstName }}</td>
           <td>{{ formatCurrency(item.totalAmount) }}</td>
@@ -78,7 +86,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref } from "vue";
+import { computed, onMounted, onUpdated, ref } from "vue";
 
 import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
@@ -100,8 +108,9 @@ import { formatCurrency } from "../js/formatCurrency";
 
 import "../css/table.css";
 import { show_alert } from "../utils/swal";
-import { userLogin, userRole } from "../utils/globalVariables";
+import { userLogin } from "../utils/globalVariables";
 
+const search = ref("");
 const receivedData = ref({});
 const datosOrder = ref([]);
 const orderDetail = ref([]);
@@ -125,9 +134,11 @@ onMounted(async () => {
   datosProduct.value = await getProducts();
 });
 
-onUpdated(async () => {
-  datosOrder.value = await getOrder();
-});
+const filterName = computed(() =>
+  datosOrder.value.filter((n) =>
+    n.firstName.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
 
 const addProduct = () => {
   selectedOrderDetail.value.push({ productId: "", price: "", quantity: 1 });
@@ -396,6 +407,8 @@ const onSubmit = async (data) => {
       );
     }
   }
+
+  datosOrder.value = await getOrder();
 };
 </script>
 
