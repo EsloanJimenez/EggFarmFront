@@ -3,6 +3,14 @@
   <div class="container mt-5">
     <div id="table-header">
       <h2 class="mb-4">Lista De Usuarios</h2>
+      <input
+        type="text"
+        v-model="search"
+        class="form form-control"
+        name="search"
+        id="search"
+        placeholder="Buscar Por Nombre De Usuario"
+      />
       <NewBotton
         title="+"
         btnStyle="btn btn-primary btn-add"
@@ -21,8 +29,8 @@
           <th>Acciones</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, i) in datosUsers" :key="i">
+      <tbody v-if="filterName.length > 0">
+        <tr v-for="(item, i) in filterName" :key="i">
           <td>{{ i + 1 }}</td>
           <td>{{ item.userName }}</td>
           <td>##########</td>
@@ -55,7 +63,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
@@ -69,6 +77,7 @@ import { userLogin } from "../utils/globalVariables";
 
 import "../css/table.css";
 
+const search = ref("");
 const receivedData = ref({});
 const datosUsers = ref([]);
 const datosRole = ref([]);
@@ -81,9 +90,11 @@ onMounted(async () => {
   datosUsers.value = await getUsers();
 });
 
-onUpdated(async () => {
-  datosUsers.value = await getUsers();
-});
+const filterName = computed(() =>
+  datosUsers.value.filter((n) =>
+    n.userName.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
 
 const openModal = async (action = "Registrar Usuario", users = null) => {
   datosRole.value = await getRole();
@@ -141,6 +152,8 @@ const onSubmit = async (data) => {
       userLogin
     );
   }
+
+  datosUsers.value = await getUsers();
 };
 </script>
 

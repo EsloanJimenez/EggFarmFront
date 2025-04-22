@@ -3,6 +3,14 @@
   <div class="container mt-5">
     <div id="table-header">
       <h2 class="mb-4">Lista De Inventario</h2>
+      <input
+        type="text"
+        v-model="search"
+        class="form form-control"
+        name="search"
+        id="search"
+        placeholder="Buscar Por Nombre"
+      />
       <NewBotton
         v-if="userRole == 1 || userRole == 4"
         title="+"
@@ -23,8 +31,8 @@
           <th v-if="userRole == 1">Acciones</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, i) in datosInventory" :key="i">
+      <tbody v-if="filterName.length > 0">
+        <tr v-for="(item, i) in filterName" :key="i">
           <td>{{ i + 1 }}</td>
           <td>{{ item.productName }}</td>
           <td>{{ item.quantityAdded }}</td>
@@ -60,7 +68,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import HeaderComponent from "../components/HeaderComponent.vue";
 import NewBotton from "../components/NewBotton.vue";
 import FormComponent from "../components/FormComponent.vue";
@@ -72,6 +80,7 @@ import { deleteInventory } from "../services/inventory/deleted";
 import "../css/table.css";
 import { userLogin, userRole } from "../utils/globalVariables";
 
+const search = ref("");
 const receivedData = ref({});
 const datosInventory = ref([]);
 const datosInventoryId = ref();
@@ -86,10 +95,11 @@ onMounted(async () => {
   datosProducts.value = await getProducts();
 });
 
-onUpdated(async () => {
-  datosInventory.value = await getInventory();
-  datosProducts.value = await getProducts();
-});
+const filterName = computed(() =>
+  datosInventory.value.filter((n) =>
+    n.productName.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
 
 const openModal = (action = "Registrar Inventario", inventory = null) => {
   isEditMode.value = action === "Actualizar";
@@ -144,6 +154,8 @@ const onSubmit = async (data) => {
       userLogin
     );
   }
+
+  datosInventory.value = await getInventory();
 };
 </script>
 

@@ -2,15 +2,19 @@
    max-width: 80%;
  }
  #table-header {
-  margin-top: 100px;
+   margin-top: 100px;
    display: flex;
    justify-content: space-around;
- }
- h2 {
-   align-self: flex-start;
-   color: #4e7d4e;
- }
- 
+  }
+  h2 {
+    align-self: flex-start;
+    color: #4e7d4e;
+  }
+  
+  #table-header .form {
+    width: 30%;
+    height: 40px;
+   }
  .table {
    border-radius: 8px;
    overflow: hidden;
@@ -26,3 +30,4 @@
  .btn-action {
    display: flex;
  }
+ 
